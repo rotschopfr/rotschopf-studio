@@ -21,16 +21,47 @@
   const $=q=>document.querySelector(q);
   const app=$('#app'),nav=$('#nav'),status=$('#status'),exportBox=$('#exportBox');
   const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));updateStatus()};
-  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
 
   function ensure(o){
     return state[o.id]||(state[o.id]={vote:'',face:o.faces[0].label,features:[],notes:''});
   }
 
+  function inferFormat(f){
+    if(f.format) return f.format;
+    const u=(f.url||'').toLowerCase().split(/[?#]/)[0];
+    if(u.endsWith('.ttf')) return 'truetype';
+    if(u.endsWith('.otf')) return 'opentype';
+    if(u.endsWith('.woff')) return 'woff';
+    return 'woff2';
+  }
+
   function fontCSS(){
     const style=document.createElement('style');
-    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${f.format||'woff2'}');font-display:swap;}`)).join('\n');
+    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${inferFormat(f)}');font-display:swap;}`)).join('\n');
     document.head.append(style);
+  }
+
+  function samplesFor(o){ return (o.samples&&o.samples.length)?o.samples:S; }
+
+  function fontProbeText(o){
+    const first=samplesFor(o).find(x=>x&&x[1]);
+    return first?String(first[1]).slice(0,64):'A';
+  }
+
+  function checkFont(o,c,face){
+    const badge=c.querySelector('.font-load');
+    if(!badge || !document.fonts) return;
+    badge.textContent='loading type…';
+    badge.className='font-load';
+    document.fonts.load(`32px "${face.family}"`,fontProbeText(o)).then(found=>{
+      const ok=!!(found&&found.length);
+      badge.textContent=ok?'font loaded ✓':'font failed to load';
+      badge.className='font-load '+(ok?'ok':'bad');
+    }).catch(()=>{
+      badge.textContent='font failed to load';
+      badge.className='font-load bad';
+    });
   }
 
   function apply(o,c){
@@ -40,6 +71,7 @@
     samples.style.fontFamily=`'${face.family}'`;
     samples.style.fontFeatureSettings=(s.features||[]).map(x=>`"${x}" 1`).join(',')||'normal';
     samples.style.fontVariationSettings=face.variation||'normal';
+    checkFont(o,c,face);
   }
 
   function updateStatus(message){
@@ -66,7 +98,7 @@
       const c=document.createElement('section');
       c.className='card';
       c.id=o.id;
-      c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}</div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;
+      c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}<div class="font-load" aria-live="polite">loading type…</div></div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;
 
       const faces=c.querySelector('.faces');
       o.faces.forEach(f=>{
@@ -104,7 +136,7 @@
       }
 
       const samples=c.querySelector('.samples');
-      (o.samples||S).forEach(([lab,text])=>{
+      samplesFor(o).forEach(([lab,text])=>{
         const d=document.createElement('div');
         d.className='sample'+(lab==='BODY'?' body':'');
         d.innerHTML=`<div class="sample-label">${esc(lab)}</div><div class="sample-text" contenteditable="true" spellcheck="false">${esc(text)}</div>`;

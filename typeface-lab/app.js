@@ -1,1 +1,175 @@
-(()=>{const B=window.FONT_BATCH;if(!B)throw new Error('FONT_BATCH missing');const S=B.samples||[['NAME','RUTHFUL JOSEF ROTSCHOPF'],['SPATIAL','Spatial Press — The sky. The vantage. The view.'],['DATA','N  E  S  W · 34.1722° N · 103.3470° W · 05:57 PM'],['HOSTILE NAME','Alexandria-Marguerite O’Shaughnessy'],['PLACE','St. John’s, Newfoundland & Labrador'],['HISTORY','1459 · 1496 · 1815 · 1913 · 1994 · 2026'],['GLYPHS','ABCDEFGHIJKLM NOPQRSTUVWXYZ · abcdefghijklm nopqrstuvwxyz · 0123456789'],['PUNCTUATION','() [] {} ‹› «» / \\ — – · • : ; , . ! ? @ # $ % & * + ='],['BODY','A useful type library should hold both infrastructure and trouble. Some faces need to disappear into the work; others should make the material itself visible.']];const KEY=`ruthie-open-font-library-b${String(B.batch).padStart(2,'0')}`;let state={};try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}};const $=q=>document.querySelector(q);const app=$('#app'),nav=$('#nav'),status=$('#status'),exportBox=$('#exportBox');const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));updateStatus()};const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));function ensure(o){return state[o.id]||(state[o.id]={vote:'',face:o.faces[0].label,features:[],notes:''})}function fontCSS(){const style=document.createElement('style');style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${f.format||'woff2'}');font-display:swap;}`)).join('\n');document.head.append(style)}function apply(o,c){const s=ensure(o),face=o.faces.find(f=>f.label===s.face)||o.faces[0],samples=c.querySelector('.samples');samples.style.fontFamily=`'${face.family}'`;samples.style.fontFeatureSettings=(s.features||[]).map(x=>`"${x}" 1`).join(',')||'normal'}function updateStatus(message){if(message){status.textContent=message;return}const decided=B.candidates.filter(o=>ensure(o).vote).length;status.textContent=`${decided}/${B.candidates.length} decided · ${B.approvedBefore||0}/100 already approved`}function render(){fontCSS();$('#title').textContent=`Ruthie Open Font Library — Batch ${String(B.batch).padStart(2,'0')}`;$('#kicker').textContent=`RUTHIE OPEN FONT LIBRARY · BATCH ${String(B.batch).padStart(2,'0')}`;$('#sub').textContent=B.subtitle||'Live type · editable specimens · autosaved YES / NO decisions';app.innerHTML='';nav.innerHTML='';B.candidates.forEach((o,i)=>{const s=ensure(o);const a=document.createElement('a');a.href=`#${o.id}`;a.textContent=`${String(i+1).padStart(2,'0')} ${o.name}`;nav.append(a);const c=document.createElement('section');c.className='card';c.id=o.id;c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}</div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;const faces=c.querySelector('.faces');o.faces.forEach(f=>{const b=document.createElement('button');b.type='button';b.className='pill'+(s.face===f.label?' active':'');b.textContent=f.label;b.onclick=()=>{s.face=f.label;faces.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');apply(o,c);save()};faces.append(b)});if(o.features?.length){const fr=c.querySelector('.features');o.features.forEach(tag=>{const b=document.createElement('button');b.type='button';b.className='pill'+((s.features||[]).includes(tag)?' active':'');b.textContent=tag;b.onclick=()=>{s.features=s.features||[];if(s.features.includes(tag))s.features=s.features.filter(x=>x!==tag);else s.features.push(tag);b.classList.toggle('active');apply(o,c);save()};fr.append(b)})}const samples=c.querySelector('.samples');S.forEach(([lab,text])=>{const d=document.createElement('div');d.className='sample'+(lab==='BODY'?' body':'');d.innerHTML=`<div class="sample-label">${esc(lab)}</div><div class="sample-text" contenteditable="true" spellcheck="false">${esc(text)}</div>`;samples.append(d)});c.querySelector('.notes').addEventListener('input',e=>{s.notes=e.target.value;save()});const votes=c.querySelector('.votes');['YES','NO'].forEach(v=>{const b=document.createElement('button');b.type='button';b.className='pill'+(s.vote===v?' active':'');b.textContent=v;b.onclick=()=>{s.vote=v;votes.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));b.classList.add('active');save()};votes.append(b)});app.append(c);apply(o,c)});updateStatus()}$('#global').addEventListener('input',e=>{const v=e.target.value;if(!v)return;document.querySelectorAll('.sample:not(.body) .sample-text').forEach(x=>x.textContent=v)});$('#size').addEventListener('input',e=>{document.documentElement.style.setProperty('--size',e.target.value+'px');$('#sizeVal').textContent=e.target.value});$('#copy').addEventListener('click',async()=>{document.querySelectorAll('.card').forEach(c=>{const o=B.candidates.find(x=>x.id===c.id);if(o)ensure(o).notes=c.querySelector('.notes').value});save();const payload={batch:B.batch,picks:B.candidates.map((o,i)=>{const s=ensure(o);return{number:i+1,name:o.name,vote:s.vote,face:s.face,features:s.features||[],notes:s.notes||''}})};const text=JSON.stringify(payload,null,2);exportBox.textContent=text;try{await navigator.clipboard.writeText(text);exportBox.hidden=true;updateStatus('Copied ✓');setTimeout(()=>updateStatus(),4500)}catch(e){exportBox.hidden=false;updateStatus('Copy blocked — payload shown below');exportBox.scrollIntoView({behavior:'smooth',block:'center'})}});render()})();
+(()=>{
+  const B=window.FONT_BATCH;
+  if(!B) throw new Error('FONT_BATCH missing');
+
+  const S=B.samples||[
+    ['NAME','RUTHFUL JOSEF ROTSCHOPF'],
+    ['SPATIAL','Spatial Press — The sky. The vantage. The view.'],
+    ['DATA','N  E  S  W · 34.1722° N · 103.3470° W · 05:57 PM'],
+    ['HOSTILE NAME','Alexandria-Marguerite O’Shaughnessy'],
+    ['PLACE','St. John’s, Newfoundland & Labrador'],
+    ['HISTORY','1459 · 1496 · 1815 · 1913 · 1994 · 2026'],
+    ['GLYPHS','ABCDEFGHIJKLM NOPQRSTUVWXYZ · abcdefghijklm nopqrstuvwxyz · 0123456789'],
+    ['PUNCTUATION','() [] {} ‹› «» / \\ — – · • : ; , . ! ? @ # $ % & * + ='],
+    ['BODY','A useful type library should hold both infrastructure and trouble. Some faces need to disappear into the work; others should make the material itself visible.']
+  ];
+
+  const KEY=`ruthie-open-font-library-b${String(B.batch).padStart(2,'0')}`;
+  let state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){state={}}
+
+  const $=q=>document.querySelector(q);
+  const app=$('#app'),nav=$('#nav'),status=$('#status'),exportBox=$('#exportBox');
+  const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));updateStatus()};
+  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+  function ensure(o){
+    return state[o.id]||(state[o.id]={vote:'',face:o.faces[0].label,features:[],notes:''});
+  }
+
+  function fontCSS(){
+    const style=document.createElement('style');
+    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${f.format||'woff2'}');font-display:swap;}`)).join('\n');
+    document.head.append(style);
+  }
+
+  function apply(o,c){
+    const s=ensure(o);
+    const face=o.faces.find(f=>f.label===s.face)||o.faces[0];
+    const samples=c.querySelector('.samples');
+    samples.style.fontFamily=`'${face.family}'`;
+    samples.style.fontFeatureSettings=(s.features||[]).map(x=>`"${x}" 1`).join(',')||'normal';
+    samples.style.fontVariationSettings=face.variation||'normal';
+  }
+
+  function updateStatus(message){
+    if(message){status.textContent=message;return}
+    const decided=B.candidates.filter(o=>ensure(o).vote).length;
+    status.textContent=`${decided}/${B.candidates.length} decided · ${B.approvedBefore||0}/100 already approved`;
+  }
+
+  function render(){
+    fontCSS();
+    $('#title').textContent=`Ruthie Open Font Library — Batch ${String(B.batch).padStart(2,'0')}`;
+    $('#kicker').textContent=`RUTHIE OPEN FONT LIBRARY · BATCH ${String(B.batch).padStart(2,'0')}`;
+    $('#sub').textContent=B.subtitle||'Live type · editable specimens · autosaved YES / NO decisions';
+    app.innerHTML='';
+    nav.innerHTML='';
+
+    B.candidates.forEach((o,i)=>{
+      const s=ensure(o);
+      const a=document.createElement('a');
+      a.href=`#${o.id}`;
+      a.textContent=`${String(i+1).padStart(2,'0')} ${o.name}`;
+      nav.append(a);
+
+      const c=document.createElement('section');
+      c.className='card';
+      c.id=o.id;
+      c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}</div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;
+
+      const faces=c.querySelector('.faces');
+      o.faces.forEach(f=>{
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='pill'+(s.face===f.label?' active':'');
+        b.textContent=f.label;
+        b.onclick=()=>{
+          s.face=f.label;
+          faces.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+          b.classList.add('active');
+          apply(o,c);
+          save();
+        };
+        faces.append(b);
+      });
+
+      if(o.features?.length){
+        const fr=c.querySelector('.features');
+        o.features.forEach(tag=>{
+          const b=document.createElement('button');
+          b.type='button';
+          b.className='pill'+((s.features||[]).includes(tag)?' active':'');
+          b.textContent=tag;
+          b.onclick=()=>{
+            s.features=s.features||[];
+            if(s.features.includes(tag)) s.features=s.features.filter(x=>x!==tag);
+            else s.features.push(tag);
+            b.classList.toggle('active');
+            apply(o,c);
+            save();
+          };
+          fr.append(b);
+        });
+      }
+
+      const samples=c.querySelector('.samples');
+      (o.samples||S).forEach(([lab,text])=>{
+        const d=document.createElement('div');
+        d.className='sample'+(lab==='BODY'?' body':'');
+        d.innerHTML=`<div class="sample-label">${esc(lab)}</div><div class="sample-text" contenteditable="true" spellcheck="false">${esc(text)}</div>`;
+        if(o.direction) d.querySelector('.sample-text').dir=o.direction;
+        samples.append(d);
+      });
+
+      c.querySelector('.notes').addEventListener('input',e=>{s.notes=e.target.value;save()});
+
+      const votes=c.querySelector('.votes');
+      ['YES','NO'].forEach(v=>{
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='pill'+(s.vote===v?' active':'');
+        b.textContent=v;
+        b.onclick=()=>{
+          s.vote=v;
+          votes.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+          b.classList.add('active');
+          save();
+        };
+        votes.append(b);
+      });
+
+      app.append(c);
+      apply(o,c);
+    });
+
+    updateStatus();
+  }
+
+  $('#global').addEventListener('input',e=>{
+    const v=e.target.value;
+    if(!v)return;
+    document.querySelectorAll('.sample:not(.body) .sample-text').forEach(x=>x.textContent=v);
+  });
+
+  $('#size').addEventListener('input',e=>{
+    document.documentElement.style.setProperty('--size',e.target.value+'px');
+    $('#sizeVal').textContent=e.target.value;
+  });
+
+  $('#copy').addEventListener('click',async()=>{
+    document.querySelectorAll('.card').forEach(c=>{
+      const o=B.candidates.find(x=>x.id===c.id);
+      if(o)ensure(o).notes=c.querySelector('.notes').value;
+    });
+    save();
+    const payload={batch:B.batch,picks:B.candidates.map((o,i)=>{
+      const s=ensure(o);
+      return{number:i+1,name:o.name,vote:s.vote,face:s.face,features:s.features||[],notes:s.notes||''};
+    })};
+    const text=JSON.stringify(payload,null,2);
+    exportBox.textContent=text;
+    try{
+      await navigator.clipboard.writeText(text);
+      exportBox.hidden=true;
+      updateStatus('Copied ✓');
+      setTimeout(()=>updateStatus(),4500);
+    }catch(e){
+      exportBox.hidden=false;
+      updateStatus('Copy blocked — payload shown below');
+      exportBox.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+
+  render();
+})();

@@ -79,7 +79,8 @@
   function updateStatus(message){
     if(message){status.textContent=message;return}
     const decided=B.candidates.filter(o=>ensure(o).vote).length;
-    status.textContent=`${decided}/${B.candidates.length} decided · ${B.approvedBefore||0}/100 already approved`;
+    const target=B.targetApproved||250;
+    status.textContent=`${decided}/${B.candidates.length} decided · ${B.approvedBefore||0}/${target} already approved`;
   }
 
   function render(){

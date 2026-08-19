@@ -2,6 +2,18 @@
   "schema_version": 1,
   "collection_mode": "additive",
   "target_approved_families": 100,
+  "audit": {
+    "audited_on": "2026-08-19",
+    "approved_families_checked": 17,
+    "open_license_pass": 17,
+    "provenance_pass": 17,
+    "blockers": 0,
+    "documentary_notes": [
+      "Version states SIL OFL in its upstream README rather than a separate root OFL file.",
+      "Half states Open Font License in its upstream README rather than a separate root OFL file.",
+      "Frames Part One's OFL status is documented in the designer distribution/readme context; preserve that documentation with the archived binaries."
+    ]
+  },
   "rules": {
     "approval_means": "Keep in Ruthie's open font library for any future purpose; approval does not replace, rank, or finalize another font.",
     "license_gate": "Open/commercial-use font license must be verified before a family is retained.",

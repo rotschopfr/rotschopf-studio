@@ -1,0 +1,24 @@
+{
+  "batch": 4,
+  "approved_before": 25,
+  "approved_after": 29,
+  "picks": [
+    {"number":1,"name":"Cooper Hewitt","vote":"YES","face":"Book","features":[],"notes":""},
+    {"number":2,"name":"Public Sans","vote":"NO","face":"Regular","features":[],"notes":""},
+    {"number":3,"name":"Redaction","vote":"NO","face":"Clear","features":[],"notes":""},
+    {"number":4,"name":"STIX Two","vote":"NO","face":"Text Regular","features":[],"notes":""},
+    {"number":5,"name":"Monaspace","vote":"YES","face":"Neon","features":[],"notes":""},
+    {"number":6,"name":"TT2020","vote":"YES","face":"Base","features":[],"notes":""},
+    {"number":7,"name":"Fanwood Text","vote":"NO","face":"Text","features":[],"notes":""},
+    {"number":8,"name":"Atkinson Hyperlegible Next","vote":"NO","face":"Variable","features":[],"notes":""},
+    {"number":9,"name":"B612","vote":"NO","face":"Regular","features":[],"notes":""},
+    {"number":10,"name":"Chomsky","vote":"YES","face":"Regular","features":[],"notes":""}
+  ],
+  "approved": [
+    {"name":"Cooper Hewitt","selected_face":"Book","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/cooperhewitt/cooperhewitt-typeface"},
+    {"name":"Monaspace","selected_face":"Neon","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/githubnext/monaspace"},
+    {"name":"TT2020","selected_face":"Base","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/ctrlcctrlv/TT2020"},
+    {"name":"Chomsky","selected_face":"Regular","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/ctrlcctrlv/chomsky"}
+  ],
+  "search_feedback": "Still too many visually/functionally similar text families. Future batches should cross genuinely different typographic media, scripts, symbol systems and machine-facing uses instead of merely changing the story behind another conventional text face."
+}

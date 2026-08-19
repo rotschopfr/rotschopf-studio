@@ -21,7 +21,7 @@
   const $=q=>document.querySelector(q);
   const app=$('#app'),nav=$('#nav'),status=$('#status'),exportBox=$('#exportBox');
   const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));updateStatus()};
-  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
+  const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
   function ensure(o){
     return state[o.id]||(state[o.id]={vote:'',face:o.faces[0].label,features:[],notes:''});
@@ -38,7 +38,7 @@
 
   function fontCSS(){
     const style=document.createElement('style');
-    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${inferFormat(f)}');font-display:swap;}`)).join('\n');
+    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${inferFormat(f)}');font-display:swap;}`)).join('\n')+`\n.group-head{margin:28px 0 13px;padding:14px 4px 9px;border-bottom:1px solid var(--line)}.group-head:first-child{margin-top:0}.group-kicker{font:800 10px system-ui,-apple-system,sans-serif;letter-spacing:.16em;color:var(--blue)}.group-title{font:800 clamp(20px,5vw,32px) system-ui,-apple-system,sans-serif;margin-top:4px}.group-note{font:12px/1.45 system-ui,-apple-system,sans-serif;color:var(--muted);margin-top:5px;max-width:760px}`;
     document.head.append(style);
   }
 
@@ -71,6 +71,8 @@
     samples.style.fontFamily=`'${face.family}'`;
     samples.style.fontFeatureSettings=(s.features||[]).map(x=>`"${x}" 1`).join(',')||'normal';
     samples.style.fontVariationSettings=face.variation||'normal';
+    samples.style.fontPalette=face.palette||'normal';
+    samples.style.fontSynthesis='none';
     checkFont(o,c,face);
   }
 
@@ -87,8 +89,18 @@
     $('#sub').textContent=B.subtitle||'Live type · editable specimens · autosaved YES / NO decisions';
     app.innerHTML='';
     nav.innerHTML='';
+    let lastGroup=null;
 
     B.candidates.forEach((o,i)=>{
+      if(o.group&&o.group!==lastGroup){
+        const meta=(B.groups&&B.groups[o.group])||{};
+        const g=document.createElement('div');
+        g.className='group-head';
+        g.innerHTML=`<div class="group-kicker">${esc(meta.kicker||'REVIEW GROUP')}</div><div class="group-title">${esc(o.group)}</div>${meta.note?`<div class="group-note">${esc(meta.note)}</div>`:''}`;
+        app.append(g);
+        lastGroup=o.group;
+      }
+
       const s=ensure(o);
       const a=document.createElement('a');
       a.href=`#${o.id}`;

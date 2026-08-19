@@ -1,0 +1,27 @@
+{
+  "batch": 5,
+  "approved_before": 29,
+  "approved_after": 36,
+  "picks": [
+    {"number":1,"name":"Bravura","vote":"YES","face":"Notation","features":[],"notes":""},
+    {"number":2,"name":"Weather Icons","vote":"YES","face":"222-icon set","features":[],"notes":""},
+    {"number":3,"name":"Flow Circular","vote":"YES","face":"Circular","features":[],"notes":""},
+    {"number":4,"name":"Wavefont","vote":"YES","face":"Rounded","features":[],"notes":""},
+    {"number":5,"name":"Libre Barcode 39 Extended Text","vote":"YES","face":"Code 39 + text","features":[],"notes":""},
+    {"number":6,"name":"Noto Sans Egyptian Hieroglyphs","vote":"NO","face":"Hieroglyphs","features":[],"notes":""},
+    {"number":7,"name":"Noto Sans SignWriting","vote":"NO","face":"SignWriting","features":[],"notes":""},
+    {"number":8,"name":"Noto Nastaliq Urdu","vote":"NO","face":"Variable","features":[],"notes":""},
+    {"number":9,"name":"VT323","vote":"YES","face":"CRT","features":[],"notes":""},
+    {"number":10,"name":"Comic Neue","vote":"YES","face":"Regular","features":[],"notes":""}
+  ],
+  "approved": [
+    {"name":"Bravura","selected_face":"Notation","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/steinbergmedia/bravura","provenance_note":"Developed by Steinberg for Dorico and maintained as the reference font for Standard Music Font Layout (SMuFL); upstream preserves source, FONTLOG and OFL materials."},
+    {"name":"Weather Icons","selected_face":"222-icon set","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/erikflowers/weather-icons","provenance_note":"Weather, maritime and meteorological icon font originally designed by Lukas Bischoff and expanded/maintained by Erik Flowers; upstream documents OFL licensing and API mappings."},
+    {"name":"Flow Circular","selected_face":"Circular","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/HYPD/flow-typeface","provenance_note":"Dan Ross / HYPD project designed to abstract content for wireframes and prototypes while preserving text mass; OFL and upstream project metadata preserved."},
+    {"name":"Wavefont","selected_face":"Rounded","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/dy/wavefont","provenance_note":"Dmitry Ivanov variable data-rendering font with Round, Vertical Alignment and Weight axes; intended for waveforms, spectra, diagrams and bars; upstream OFL/source metadata preserved."},
+    {"name":"Libre Barcode 39 Extended Text","selected_face":"Code 39 + text","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/graphicore/librebarcode","provenance_note":"Libre Barcode project led by Lasse Fister; machine-readable Code 39 family with human-readable text, OFL and documentation preserved upstream."},
+    {"name":"VT323","selected_face":"CRT","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/phoikoi/VT323","provenance_note":"Peter Hull reconstruction from DEC VT320 terminal glyphs, deliberately modeling CRT pixel aspect and phosphor smear rather than generic square-pixel nostalgia; OFL preserved."},
+    {"name":"Comic Neue","selected_face":"Regular","license":"SIL Open Font License 1.1","license_status":"verified","provenance_status":"verified","source_url":"https://github.com/crozynski/comicneue","provenance_note":"Craig Rozynski reinterpretation of Comic Sans intended to retain casual honesty while regularizing the forms; OFL and project source preserved."}
+  ],
+  "search_feedback": "Keep widening visual and historical lanes without turning every batch into either conventional text families or specialist symbol systems. Additive library; no replacement/finalization pressure."
+}

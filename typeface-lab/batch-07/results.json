@@ -1,0 +1,17 @@
+{
+  "batch": 7,
+  "approved_before": 36,
+  "approved_after": 46,
+  "picks": [
+    {"number":1,"name":"Daubenton","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":2,"name":"Résistance Générale","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":3,"name":"Saint Jean","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":4,"name":"Commune Nuit Debout","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":5,"name":"Apfel Grotezk","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":6,"name":"Young Serif","vote":"YES","face":"Italic","features":[],"notes":""},
+    {"number":7,"name":"Routed Gothic","vote":"YES","face":"Regular","features":[],"notes":""},
+    {"number":8,"name":"Mazius Display","vote":"YES","face":"Extra Italic Bold","features":[],"notes":""},
+    {"number":9,"name":"Nata Sans","vote":"YES","face":"Light","features":[],"notes":""},
+    {"number":10,"name":"Sinistre","vote":"YES","face":"Regular","features":[],"notes":""}
+  ]
+}

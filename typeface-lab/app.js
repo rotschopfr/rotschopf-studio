@@ -22,6 +22,7 @@
   const app=$('#app'),nav=$('#nav'),status=$('#status'),exportBox=$('#exportBox');
   const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));updateStatus()};
   const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  let fontObserver=null;
 
   function ensure(o){
     return state[o.id]||(state[o.id]={vote:'',face:o.faces[0].label,features:[],notes:''});
@@ -38,7 +39,7 @@
 
   function fontCSS(){
     const style=document.createElement('style');
-    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${inferFormat(f)}');font-display:swap;}`)).join('\n')+`\n.group-head{margin:28px 0 13px;padding:14px 4px 9px;border-bottom:1px solid var(--line)}.group-head:first-child{margin-top:0}.group-kicker{font:800 10px system-ui,-apple-system,sans-serif;letter-spacing:.16em;color:var(--blue)}.group-title{font:800 clamp(20px,5vw,32px) system-ui,-apple-system,sans-serif;margin-top:4px}.group-note{font:12px/1.45 system-ui,-apple-system,sans-serif;color:var(--muted);margin-top:5px;max-width:760px}`;
+    style.textContent=B.candidates.flatMap(o=>o.faces.map(f=>`@font-face{font-family:'${f.family}';src:url('${f.url}') format('${inferFormat(f)}');font-display:swap;}`)).join('\n')+`\n.group-head{margin:28px 0 13px;padding:14px 4px 9px;border-bottom:1px solid var(--line)}.group-head:first-child{margin-top:0}.group-kicker{font:800 10px system-ui,-apple-system,sans-serif;letter-spacing:.16em;color:var(--blue)}.group-title{font:800 clamp(20px,5vw,32px) system-ui,-apple-system,sans-serif;margin-top:4px}.group-note{font:12px/1.45 system-ui,-apple-system,sans-serif;color:var(--muted);margin-top:5px;max-width:760px}.card{content-visibility:auto;contain-intrinsic-size:900px}`;
     document.head.append(style);
   }
 
@@ -73,6 +74,7 @@
     samples.style.fontVariationSettings=face.variation||'normal';
     samples.style.fontPalette=face.palette||'normal';
     samples.style.fontSynthesis='none';
+    c.dataset.fontActive='1';
     checkFont(o,c,face);
   }
 
@@ -91,6 +93,18 @@
     app.innerHTML='';
     nav.innerHTML='';
     let lastGroup=null;
+
+    if('IntersectionObserver' in window){
+      fontObserver=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+          if(!entry.isIntersecting)return;
+          const c=entry.target;
+          const o=B.candidates.find(x=>x.id===c.id);
+          if(o&&!c.dataset.fontActive)apply(o,c);
+          fontObserver.unobserve(c);
+        });
+      },{rootMargin:'1000px 0px'});
+    }
 
     B.candidates.forEach((o,i)=>{
       if(o.group&&o.group!==lastGroup){
@@ -111,7 +125,7 @@
       const c=document.createElement('section');
       c.className='card';
       c.id=o.id;
-      c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}<div class="font-load" aria-live="polite">loading type…</div></div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;
+      c.innerHTML=`<div class="head"><div class="num">${String(i+1).padStart(2,'0')}</div><div><h2>${esc(o.name)}</h2><div class="artist">${esc(o.artist)}</div></div></div><p class="story">${esc(o.story)}</p><div class="license">${esc(o.license)}</div><div class="controls"><div class="control-label">SUPPLIED CUTS / STATES</div><div class="row faces"></div>${o.features?.length?'<div class="control-label" style="margin-top:12px">OPENTYPE</div><div class="row features"></div>':''}<div class="font-load" aria-live="polite">type loads as you approach…</div></div><div class="samples"></div><textarea class="notes" placeholder="Optional note — where could this live, what is delicious, what bothers you…">${esc(s.notes||'')}</textarea><div class="decision-wrap"><div class="decision-label">KEEP THIS IN THE LIBRARY?</div><div class="votes"></div></div>`;
 
       const faces=c.querySelector('.faces');
       o.faces.forEach(f=>{
@@ -123,6 +137,7 @@
           s.face=f.label;
           faces.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
           b.classList.add('active');
+          if(fontObserver)fontObserver.unobserve(c);
           apply(o,c);
           save();
         };
@@ -141,6 +156,7 @@
             if(s.features.includes(tag)) s.features=s.features.filter(x=>x!==tag);
             else s.features.push(tag);
             b.classList.toggle('active');
+            if(fontObserver)fontObserver.unobserve(c);
             apply(o,c);
             save();
           };
@@ -175,7 +191,7 @@
       });
 
       app.append(c);
-      apply(o,c);
+      if(fontObserver)fontObserver.observe(c); else apply(o,c);
     });
 
     updateStatus();

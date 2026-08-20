@@ -1,0 +1,11 @@
+{
+  "batch": 13,
+  "approved_before": 128,
+  "yes": 38,
+  "no": 2,
+  "approved_after": 166,
+  "target": 250,
+  "picks": [
+    [1,"Borges","YES","Square Pixel"],[2,"Ronzino","YES","Regular"],[3,"Aujournuit","YES","Airy"],[4,"Absans","YES","Regular"],[5,"Ribes","YES","Light"],[6,"Mattone","NO","Regular"],[7,"Coconat","YES","Regular"],[8,"Ortica","YES","Angular Bold"],[9,"Messapia","NO","Bold"],[10,"Halibut","YES","Expanded"],[11,"Sneaky Times","YES","Regular"],[12,"Necto Mono","YES","Regular"],[13,"Jost*","YES","Light"],[14,"Bodoni Moda","YES","Italic"],[15,"Drafting*","YES","Italic"],[16,"Besley*","YES","Narrow"],[17,"Bungee Hairline","YES","Hairline"],[18,"Bungee Inline","YES","Inline"],[19,"Bungee Outline","YES","Outline"],[20,"Bungee Shade","YES","Shade"],[21,"Bungee Tint","YES","Color"],[22,"Tilt Neon","YES","Front"],[23,"Tilt Prism","YES","Front"],[24,"Jacquarda Bastarda 9 Charted","YES","Charted"],[25,"Jersey 10 Charted","YES","Charted"],[26,"Jersey 15 Charted","YES","Charted"],[27,"Jersey 20 Charted","YES","Charted"],[28,"Jersey 25 Charted","YES","Charted"],[29,"Micro 5 Charted","YES","Charted"],[30,"Yarndings 12 Charted","YES","Charted"],[31,"Yarndings 20 Charted","YES","Charted"],[32,"Monaspace Argon","YES","Regular"],[33,"Monaspace Krypton","YES","Regular"],[34,"Monaspace Radon","YES","Regular"],[35,"Monaspace Xenon","YES","Regular"],[36,"Trickster","YES","Regular"],[37,"Victorianna","YES","Thin"],[38,"Format 1452","YES","Regular"],[39,"Runic","YES","Plain"],[40,"Bluu Next","YES","Bold"]
+  ]
+}

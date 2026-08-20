@@ -1,0 +1,18 @@
+{
+  "batch": 10,
+  "recorded_on": "2026-08-19",
+  "target_approved_families": 250,
+  "picks": [
+    {"number":1,"name":"Sixtyfour Convergence","vote":"YES","face":"Aligned / clean","features":[],"notes":""},
+    {"number":2,"name":"Workbench","vote":"YES","face":"Clean Workbench","features":[],"notes":""},
+    {"number":3,"name":"Handjet","vote":"YES","face":"Square matrix","features":[],"notes":""},
+    {"number":4,"name":"Tiny5","vote":"YES","face":"Crisp gadget","features":[],"notes":""},
+    {"number":5,"name":"Datalegreya","vote":"YES","face":"Gradient","features":["liga","dlig","calt"],"notes":""},
+    {"number":6,"name":"Averia Libre","vote":"YES","face":"Light","features":[],"notes":""},
+    {"number":7,"name":"Amstelvar","vote":"YES","face":"Bookish","features":[],"notes":""},
+    {"number":8,"name":"Relief SingleLine","vote":"YES","face":"Web outline","features":[],"notes":""},
+    {"number":9,"name":"Jacquard / Jacquard Charted","vote":"YES","face":"12","features":[],"notes":""},
+    {"number":10,"name":"Old Timey Mono","vote":"YES","face":"Regular","features":[],"notes":""}
+  ],
+  "approved_in_batch": 10
+}

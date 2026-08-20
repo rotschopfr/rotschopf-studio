@@ -1,0 +1,9 @@
+{
+  "batch": 13,
+  "approvedBefore": 128,
+  "yes": 38,
+  "no": 2,
+  "approvedAfter": 166,
+  "noNames": ["Mattone", "Messapia"],
+  "note": "All other Batch 13 candidates approved for Ruthie's personal open-font library. Expanded-family siblings count as independent approvals."
+}
